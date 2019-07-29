@@ -1,0 +1,46 @@
+.home {
+	.chartTop {
+		.c {
+			height: 42px;
+		}
+		.b {
+			margin-top: 8px;
+			padding-top: 9px;
+			border-top: 1px solid #e8e8e8;
+			> span {
+				display: inline-block;
+			}
+			span + span {
+				margin-left: 8px;
+			}
+		}
+	}
+	.chartCenter {
+		margin-bottom: 24px;
+    :global {
+      .ant-tabs-extra-content {
+        > div {
+          display: flex;
+          align-items: center;
+          padding-right: 24px;
+          height: 55px;
+          > ul {
+            display: flex;
+            > li {
+              margin-right: 24px;
+              > span {
+                cursor: pointer;
+                &:hover {
+                  color: #1890ff;
+                }
+              }
+              .active {
+                color: #1890ff;
+              }
+            }
+          }
+        }
+      }
+    }
+	}
+}
