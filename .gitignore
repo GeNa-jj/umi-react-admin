@@ -12,7 +12,14 @@
 
 # misc
 .DS_Store
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
 # umi
 .umi
 .umi-production
+
