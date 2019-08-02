@@ -104,7 +104,7 @@ class Home extends React.Component {
 							color: '#5AADF1'
 						}
 					},
-					data: [1000, 2000, 150, 3000, 200, 1200, 800, 1000, 200, 1500, 300, 200]
+					data: [1000, 2000, 150, 3000, 200, 1200, 800, 1000, 2000, 1500, 3000, 2000]
 				}
 			]
 		}
@@ -178,7 +178,7 @@ class Home extends React.Component {
 	}
 
 	render() {
-		const {isMobile} = this.props
+		const {isMobile, clientWidth} = this.props
 		return (
 				<div className={styles.home}>
 					<Row gutter={24} className={styles.chartTop}>
@@ -219,7 +219,7 @@ class Home extends React.Component {
               !isMobile && (
 								<div>
 									{
-                    window.innerWidth > 768 && (
+                    clientWidth > 992 && (
 												<ul>
 													{this.state.dateKey.map((item, index) => (
 															<li key={index}><span className={item.active ? 'active' : ''} onClick={() => {
@@ -266,5 +266,6 @@ class Home extends React.Component {
 }
 
 export default connect(({global}) => ({
-  isMobile: global.isMobile
+  isMobile: global.isMobile,
+  clientWidth: global.clientWidth
 }))(Home)

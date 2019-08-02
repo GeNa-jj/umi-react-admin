@@ -6,6 +6,7 @@ import 'nprogress/nprogress.css'
 import styles from './index.less'
 import {login} from '../../services'
 import router from 'umi/router'
+import {connect} from 'dva'
 
 class Login extends React.Component {
 
@@ -30,8 +31,14 @@ class Login extends React.Component {
 			NProgress.done()
 			if (data && data.header === '000') {
 				$cookies.set('token', data.data.token, data.data.effectTime)
-				$cookies.set('menu', JSON.stringify(data.data.menu), data.data.effectTime)
-				router.replace('/')
+				// $cookies.set('menu', JSON.stringify(data.data.menu), data.data.effectTime)
+        router.replace('/')
+
+        const {dispatch} = this.props
+        // 获取mock模拟的菜单
+        dispatch({
+          type: 'route/getMenuData'
+        })
 			} else {
 				message.error(data.message)
 			}
@@ -86,4 +93,4 @@ class Login extends React.Component {
 	}
 }
 
-export default Form.create()(Login)
+export default connect()(Form.create()(Login))

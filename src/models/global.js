@@ -2,12 +2,25 @@ export default {
 
   namespace: 'global',
 
-  state: {},
+  state: {
+    isMobile: false
+  },
 
   subscriptions: {
     // TODO 一般用来监听路由
     setup({ dispatch, history }) {
       console.log('dva global')
+    },
+
+    setupClientWidth({ dispatch }) {
+      dispatch({
+        type: 'getClientWidth'
+      })
+      window.onresize = () => {
+        dispatch({
+          type: 'getClientWidth'
+        })
+      }
     }
   },
 
@@ -16,14 +29,26 @@ export default {
     // *fetch({ payload }, { call, put }) {
     //   const response = yield call(api, payload)
     //   yield put({
-    //     type: 'save',
+    //     type: 'updateState',
     //     payload
     //   })
     // }
+
+    // 获取当前浏览器宽度并设置isMobile管理响应式
+    *getClientWidth({ payload }, { call, put }) {
+      const clientWidth = window.innerWidth
+      yield put({
+        type: 'updateState',
+        payload: {
+          isMobile: clientWidth <= 576,
+          clientWidth
+        }
+      })
+    }
   },
 
   reducers: {
-    save(state, { payload }) {
+    updateState(state, { payload }) {
       return { ...state, ...payload }
     }
   }

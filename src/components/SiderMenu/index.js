@@ -8,10 +8,12 @@ const SiderMenuWrapper = props =>
       visible={!props.collapsed}
       placement="left"
       closable={false}
-      onClose={props.onCollapse}
+      onClose={() => {
+        props.onCollapse(true)
+      }}
       bodyStyle={{padding: 0, fontSize: 15}}
     >
-      <SiderMenu {...props} collapsed={false} onCollapse={null} />
+      <SiderMenu {...props} collapsed={false} />
     </Drawer>
   ) : (
     <SiderMenu {...props} />

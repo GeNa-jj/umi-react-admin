@@ -9,3 +9,30 @@ body, h1, h2, h3, h4, p, a, input, img, ul, li, ol, dl, dt, dd, label {
 ul, ol {
   list-style: none;
 }
+
+.clearfix::after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  overflow: hidden;
+  visibility: hidden;
+  zoom: 1;
+}
+
+@media (max-width: 992px) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
+        white-space: pre;
+        > span {
+          display: block;
+        }
+      }
+    }
+  }
+}

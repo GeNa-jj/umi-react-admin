@@ -49,7 +49,8 @@ export default class HeaderCustom extends React.Component {
     }).then((data) => {
       if (data && data.header === '000') {
         $cookies.remove('token')
-        $cookies.remove('menu')
+        // $cookies.remove('menu')
+        localStorage.removeItem('menu')
         router.replace('/login')
       } else {
         message.error(data.message)
@@ -77,7 +78,9 @@ export default class HeaderCustom extends React.Component {
       <Header className={style.headerCustom}>
         <Icon
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
-          onClick={onCollapse}
+          onClick={() => {
+            onCollapse(!collapsed)
+          }}
         />
 
         <Dropdown overlay={this.menu} trigger={['click']}>

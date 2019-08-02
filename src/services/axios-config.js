@@ -90,7 +90,8 @@ class AxiosConfig {
           case '900':
           case '905':
             $cookies.remove('token')
-            $cookies.remove('menu')
+            // $cookies.remove('menu')
+            localStorage.removeItem('menu')
             router.replace('/login')
             break
           default:
