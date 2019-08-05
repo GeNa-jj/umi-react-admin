@@ -12,10 +12,10 @@ export default {
           icon: 'lock',
           path: '/test',
           children: [
-            // {
-            //   name: "table",
-            //   path: "/test/table"
-            // },
+            {
+              name: "table",
+              path: "/test/table"
+            },
             {
               name: "路由拦截",
               path: "/test/cannot"

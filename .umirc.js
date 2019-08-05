@@ -46,8 +46,8 @@ export default {
     }
   ],
   proxy: {
-    '/web': {
-      target: 'http://vm3.busbox.com.cn:15000/hongkong-cms'
-    }
+    // '/web': {
+    //   target: 'http://vm3.busbox.com.cn:15000/hongkong-cms'
+    // }
   }
 }
