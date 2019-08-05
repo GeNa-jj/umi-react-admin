@@ -2,6 +2,7 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/Breadcrumb'
 import {Table, Divider, Tag, Card, Row, Col, Input, Button, Form, Icon, Tooltip} from 'antd'
 import Pagination from '../../components/Pagination'
+import styles from './index.less'
 
 const data = [
 	{
@@ -97,10 +98,10 @@ class Text extends React.Component {
 	render() {
 		const formItemLayout = {
 			labelCol: {span: 8},
-			wrapperCol: {span: 16},
+			wrapperCol: {span: 16}
 		}
 		return (
-				<div className="test">
+				<div className={styles.table}>
 					<BreadcrumbCustom first="权限测试" second="table"/>
 					<Card>
 						<Form {...formItemLayout} onSubmit={this.handleSearch}>

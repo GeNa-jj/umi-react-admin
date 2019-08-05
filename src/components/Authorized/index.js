@@ -3,7 +3,7 @@ import { connect } from 'dva'
 import router from 'umi/router'
 
 const getFlatMenuKeys = menus => {
-  let keys = [];
+  let keys = []
   menus.forEach(item => {
     if (item.children) {
       keys = keys.concat(getFlatMenuKeys(item.children))
@@ -35,7 +35,6 @@ class AuthRouter extends React.Component {
   }
 }
 
-// export default ListData;
 export default connect(({route}) => ({
     menuData: route.menu
   })

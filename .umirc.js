@@ -1,10 +1,5 @@
 // ref: https://umijs.org/config/
 export default {
-  ignoreMomentLocale: true,
-  treeShaking: true,
-  targets: {
-    ie: 10
-  },
   base: process.env.NODE_ENV === 'development' ? '/' : process.env.BASEPATH,
   publicPath: 'https://dev.huatugz.com/admin-test/',
   plugins: [
@@ -49,5 +44,17 @@ export default {
     // '/web': {
     //   target: 'http://vm3.busbox.com.cn:15000/hongkong-cms'
     // }
+  },
+  theme: {
+    '@primary-color': '#1DA57A'
+  },
+  hash: true,
+  ignoreMomentLocale: true,
+  treeShaking: true,
+  targets: {
+    ie: 10,
+    android: 5,
+    ios: 7,
+    chrome: 58
   }
 }
