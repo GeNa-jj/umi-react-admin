@@ -1,4 +1,8 @@
 {
+  "name": "umi-react-admin",
+  "version": "0.0.1",
+  "description": "基于umi、dva和antd响应式后台模版",
+  "author": "lujianjun <lujj@huatugz.com>",
   "private": true,
   "scripts": {
     "start": "umi dev",
