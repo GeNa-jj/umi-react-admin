@@ -25,36 +25,17 @@ export default {
     }]
   ],
   disableRedirectHoist: true,
-  routes: [
-    {
-      path: '/',
-      component: '../layouts/index',
-      Routes: ['src/components/Authorized'],
-      routes: [
-        { path: '/', component: './home' },
-        { path: '/test/table', component: './table', title: 'table' },
-        { path: '/exception/404', component: './404' },
-        { path: '/login', component: './login' },
-        { path: '/404', component: './404' },
-        { redirect: '/404' }
-      ]
-    }
-  ],
+  routes: require('@/routes'),
   proxy: {
     // '/web': {
     //   target: 'http://vm3.busbox.com.cn:15000/hongkong-cms'
     // }
   },
-  theme: {
-    '@primary-color': '#1DA57A'
-  },
+  theme: require('@/theme'),
   hash: true,
   ignoreMomentLocale: true,
   treeShaking: true,
   targets: {
-    ie: 10,
-    android: 5,
-    ios: 7,
-    chrome: 58
+    ie: 10
   }
 }

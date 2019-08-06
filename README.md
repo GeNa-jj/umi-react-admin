@@ -7,19 +7,21 @@
 ├── package.json
 ├── public               // favicon.ico
 ├── .env                 // 环境变量
-├── .umirc.js            // umi 配置，包括路由
+├── .umirc.js            // umi 配置
 ├── src
 │   ├── app.js           // 运行时的配置文件  
 │   ├── assets           // 本地静态资源 
 │   ├── components       // 业务组件
 │   ├── global.less      // 约定的全局样式文件，自动引入
 │   ├── layouts          // 全局布局
-│   ├── models           // use umi with dva (redux)
+│   ├── models           // dva (redux)
 │   ├── pages            // 页面目录
 │   │   ├── home         // 首页 
-│   │   └──document.ejs  // html页面
+│   │   └── document.ejs  // html页面
+│   ├── routes           // 路由配置 
 │   ├── services         // 请求
-│   └── utils            
+│   ├── theme            // 主题配置 
+│   └── utils            // 工具
 ├── webpack.config.js
 └── yarn.lock
 
