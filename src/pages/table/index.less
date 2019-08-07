@@ -1,5 +1,3 @@
-@import '~antd/es/style/themes/default.less';
-
 .table {
   :global {
     @media (max-width: 575px) {
@@ -7,24 +5,6 @@
       .ant-form-item-control-wrapper {
         display: block;
         width: 100%;
-      }
-    }
-
-
-    @media (max-width: @screen-lg) {
-      .ant-table {
-        width: 100%;
-        overflow-x: auto;
-        &-thead > tr,
-        &-tbody > tr {
-          > th,
-          > td {
-            white-space: pre;
-            > span {
-              display: block;
-            }
-          }
-        }
       }
     }
   }

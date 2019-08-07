@@ -1,3 +1,5 @@
+@import '~antd/es/style/themes/default.less';
+
 body, html, #root {
   height: 100%;
 }
@@ -8,4 +10,21 @@ body, h1, h2, h3, h4, p, a, input, img, ul, li, ol, dl, dt, dd, label {
 
 ul, ol {
   list-style: none;
+}
+
+@media (max-width: @screen-lg) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
+        white-space: pre;
+        > span {
+          display: block;
+        }
+      }
+    }
+  }
 }

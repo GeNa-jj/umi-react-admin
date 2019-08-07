@@ -24,12 +24,23 @@ export default {
         },
         {
           name: '错误页面',
-          icon: 'user',
+          icon: 'warning',
           path: '/exception',
           children: [
             {
               name: "404",
               path: "/exception/404",
+            }
+          ]
+        },
+        {
+          name: '个人页',
+          icon: 'user',
+          path: '/user',
+          children: [
+            {
+              name: "个人设置",
+              path: "/user/setting",
             }
           ]
         }

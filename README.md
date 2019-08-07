@@ -20,7 +20,7 @@
 │   │   └── document.ejs  // html页面
 │   ├── routes           // 路由配置 
 │   ├── services         // 请求
-│   ├── theme            // 主题配置 
+│   ├── theme            // 主题样式配置 
 │   └── utils            // 工具
 ├── webpack.config.js
 └── yarn.lock
