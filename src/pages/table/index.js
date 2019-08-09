@@ -45,11 +45,14 @@ arr.forEach(item => {
 })
 
 class Text extends React.Component {
+
 	state = {
 		total: 13,
 		pageNum: 1,
-		pageSize: 10
+		pageSize: 10,
+    downloadLoading: false
 	}
+
 	pageChange = (pageNum, pageSize) => {
 		this.setState({
 			pageNum,
@@ -95,6 +98,29 @@ class Text extends React.Component {
 		this.props.form.resetFields()
 	}
 
+  handleDownload = () => {
+    this.setState({ downloadLoading: true })
+    import('@/utils/Export2Excel').then(excel => {
+      const tHeader = ['firstName', 'lastName', 'age', 'address', 'tags']
+      const filterVal = ['firstName', 'lastName', 'age', 'address', 'tags']
+      const dataExl = this.formatJson(filterVal, data)
+      excel.export_json_to_excel({
+        header: tHeader,
+        data: dataExl,
+        filename: 'table',
+        autoWidth: true,
+        bookType: 'xlsx'
+      })
+      this.setState({ downloadLoading: false })
+    })
+  }
+
+  formatJson = (filterVal, jsonData) => {
+    return jsonData.map(v => filterVal.map(j => {
+      return v[j]
+    }))
+  }
+
 	render() {
 		const formItemLayout = {
 			labelCol: {span: 8},
@@ -115,6 +141,9 @@ class Text extends React.Component {
 										<Button style={{marginLeft: 8}} onClick={this.handleReset}>
 											Clear
 										</Button>
+                    <Button loading={this.state.downloadLoading} icon="export" type="dashed" style={{marginLeft: 8}} onClick={this.handleDownload}>
+                      导出
+                    </Button>
 									</Form.Item>
 								</Col>
 							</Row>
