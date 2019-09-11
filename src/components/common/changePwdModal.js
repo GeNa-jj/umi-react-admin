@@ -6,7 +6,7 @@ class ChangePwdMoadl extends React.Component {
 		confirmDirty: false
 	}
 
-	handleOk = e => {
+  handleSubmit = e => {
 		e.preventDefault()
 		this.props.form.validateFields((err, data) => {
 			if (!err) {
@@ -45,10 +45,6 @@ class ChangePwdMoadl extends React.Component {
 		}
 	}
 
-	handleStart = e => {
-		console.log(e)
-	}
-
 	render() {
 		const {getFieldDecorator} = this.props.form
 		return (
@@ -56,7 +52,7 @@ class ChangePwdMoadl extends React.Component {
 						width={400}
 						title="修改密码"
 						visible={this.props.visible}
-						onOk={this.handleOk}
+						onOk={this.handleSubmit}
 						onCancel={this.handleCancel}
 				>
 					<Form onSubmit={this.handleSubmit} className="change-password-form">

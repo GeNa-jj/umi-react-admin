@@ -10,15 +10,19 @@ export default {
         {
           name: '权限测试',
           icon: 'lock',
-          path: '/test',
+          path: '/permission',
           children: [
             {
               name: "table",
-              path: "/test/table"
+              path: "/permission/table"
             },
             {
               name: "路由拦截",
-              path: "/test/cannot"
+              path: "/permission/cannot"
+            },
+            {
+              name: "角色权限",
+              path: "/permission/role"
             }
           ]
         },
@@ -41,6 +45,10 @@ export default {
             {
               name: "个人设置",
               path: "/user/setting",
+            },
+            {
+              name: "用户中心",
+              path: "/user/center",
             }
           ]
         }

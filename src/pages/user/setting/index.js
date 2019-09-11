@@ -132,6 +132,7 @@ class Setting extends React.Component {
     })
   }
 
+  // 画路线
   renderRouteCoordinate = routeCoordinate => {
     /* eslint-disable */
     let polyline = new AMap.Polyline({

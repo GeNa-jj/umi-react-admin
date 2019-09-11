@@ -1,7 +1,7 @@
 import React from 'react'
-import BreadcrumbCustom from '../../components/Breadcrumb'
+import BreadcrumbCustom from '@/components/Breadcrumb'
 import {Table, Divider, Tag, Card, Row, Col, Input, Button, Form, Icon, Tooltip} from 'antd'
-import Pagination from '../../components/Pagination'
+import Pagination from '@/components/Pagination'
 import styles from './index.less'
 
 const data = [
