@@ -1,7 +1,5 @@
 // ref: https://umijs.org/config/
 export default {
-  base: process.env.NODE_ENV === 'development' ? '/' : process.env.BASEPATH,
-  publicPath: 'https://dev.huatugz.com/admin-test/',
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     ['umi-plugin-react', {
@@ -10,8 +8,13 @@ export default {
         immer: true,
       },
       dynamicImport: false,
-      title: 'umi-react-admin',
+      title: 'schedulingSystem',
       dll: false,
+      locale: {
+        default: 'zh-CN',
+        baseNavigator: true,
+        antd: true
+      },
 
       routes: {
         exclude: [
@@ -25,13 +28,12 @@ export default {
     }]
   ],
   disableRedirectHoist: true,
-  routes: require('@/routes'),
+  routes: require('./src/routes'),
   proxy: {
-    // '/web': {
-    //   target: 'http://vm3.busbox.com.cn:15000/hongkong-cms'
+    // '/api': {
+    //   target: 'http://192.168.0.1'
     // }
   },
-  theme: require('@/theme'),
   hash: true,
   ignoreMomentLocale: true,
   treeShaking: true,

@@ -18,8 +18,9 @@
 *.ntvs*
 *.njsproj
 *.sln
+*.mp4
+
 
 # umi
 .umi
 .umi-production
-

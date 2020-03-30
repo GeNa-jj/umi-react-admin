@@ -1,23 +1,38 @@
 .login {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background-color: rgba(0, 0, 0, .4);
-	> div {
-		width: 320px;
-		height: 360px;
-		padding: 20px;
-		background-color: #fff;
-		box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
-		border: 1px solid #e4e7ed;
-		border-radius: 8px;
-		h2 {
-			text-align: center;
-		}
-		> form {
-			margin-top: 20px;
-		}
-	}
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: auto;
+  .content {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 0 20px;
+    width: 448px;
+    max-width: 100%;
+  }
+  .logo {
+    > h1 {
+      font-size: 34px;
+      line-height: 1.2;
+      margin-top: 16px;
+      color: rgba(0,0,0,.85);
+      font-weight: 600;
+      text-align: center;
+    }
+  }
+
+  .loginBox {
+    margin: 100px 0;
+    width: 100%;
+    max-width: 100%;
+    .loginButton {
+      button {
+        width: 100%;
+        margin-top: 24px;
+      }
+    }
+  }
 }

@@ -1,7 +1,9 @@
 import React, { PureComponent } from 'react'
 import { Layout, Menu, Icon } from 'antd'
 import Link from 'umi/link'
+// import router from 'umi/router'
 import styles from './index.less'
+import {urlToList} from '@/utils'
 
 export default class SiderMenu extends PureComponent {
   constructor(props) {
@@ -24,14 +26,7 @@ export default class SiderMenu extends PureComponent {
    */
   getDefaultCollapsedSubMenus = props => {
     const { location: { pathname } } = props || this.props
-    return this.urlToList(pathname)
-  }
-  // /userinfo/2144/id => ['/userinfo','/useinfo/2144,'/userindo/2144/id']
-  urlToList = url => {
-    const urllist = url.split('/').filter(i => i)
-    return urllist.map((urlItem, index) => {
-      return `/${urllist.slice(0, index + 1).join('/')}`
-    })
+    return urlToList(pathname)
   }
   /**
    * Allow menu.js config icon as string or ReactNode
@@ -106,7 +101,10 @@ export default class SiderMenu extends PureComponent {
                 item.name
               )
             }
-            key={item.path}
+            key={item.path || item.key}
+            // onTitleClick={() => {
+            //   item.path && router.push(item.path)
+            // }}
           >
             {childrenItems}
           </Menu.SubMenu>
@@ -114,7 +112,7 @@ export default class SiderMenu extends PureComponent {
       }
       return null
     } else {
-      return <Menu.Item key={item.path}>{this.getMenuItemPath(item)}</Menu.Item>
+      return <Menu.Item key={item.path || item.key}>{this.getMenuItemPath(item)}</Menu.Item>
     }
   }
   /**
@@ -137,7 +135,7 @@ export default class SiderMenu extends PureComponent {
   handleOpenChange = openKeys => {
     const { collapsed } = this.props
     const lastOpenKey = openKeys[openKeys.length - 1]
-    const keysList = openKeys.slice(-1 * this.urlToList(lastOpenKey || '').length)
+    const keysList = openKeys.slice(-1 * urlToList(lastOpenKey || '').length)
 
     this.setState({
       openKeys: lastOpenKey ? [...keysList] : (collapsed ? this.getDefaultCollapsedSubMenus() : [...openKeys])
@@ -157,7 +155,6 @@ export default class SiderMenu extends PureComponent {
     // Don't show popup menu when it is been collapsed
     const menuProps = collapsed ? {} : {openKeys}
 
-    const light = theme === 'light' ? styles.ligth : ''
     return (
       <Layout.Sider
         trigger={null}
@@ -166,12 +163,15 @@ export default class SiderMenu extends PureComponent {
         breakpoint="lg"
         onCollapse={isMobile ? null : onCollapse}
         width={256}
+        collapsedWidth={80}
         theme={theme}
         className={styles.sider}
       >
-        <div className={styles.logo + ' ' + light} key="logo">
-          <img src={logo} alt="logo" />
-          <h1>后台管理系统</h1>
+        <div className={`${styles.logo} ${theme === 'light' ? styles.ligth : undefined}`} key="logo">
+          <Link to="/">
+            <img src={logo} alt="" />
+            {!collapsed && <h1>umi后台管理系统模版</h1>}
+          </Link>
         </div>
         <Menu
           key="Menu"

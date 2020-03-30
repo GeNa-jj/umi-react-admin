@@ -1,46 +1,49 @@
 import React from 'react'
-import { Layout, Spin } from 'antd'
+import {Layout, Spin} from 'antd'
 import {connect} from 'dva'
 import withRouter from 'umi/withRouter'
 import SiderMenu from '../components/SiderMenu'
 import HeaderCustom from '../components/Header'
-import logo from '../assets/yay.jpg'
+import Breakcrumbs from '../components/Breakcrumbs'
+// import logo from '../assets/images/bus.png'
 import styles from './index.less'
 
 class BasicLayout extends React.Component {
 
-  state = {
-    collapsed: this.props.isMobile
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.location !== prevProps.location) {
-      const containDom = document.getElementById('main')
-      containDom && containDom.scrollTo(0, 0)
-    }
-  }
-
   handleMenuCollapse = (collapsed = true) => {
-    this.setState({ collapsed })
+    const {dispatch} = this.props
+    dispatch({
+      type: 'global/updateState',
+      payload: {collapsed}
+    })
+  }
+
+  getMenu = () => {
+    const {dispatch, location: {pathname}} = this.props
+    if (pathname !== '/login' && pathname !== '/404') dispatch({ type: 'global/getMenu' })
+  }
+
+  componentDidMount() {
+    this.getMenu()
   }
 
   render() {
-    const { children, location, isMobile, menuData, getMenuLoading } = this.props
-    const { collapsed } = this.state
+    const { children, location, isMobile, collapsed, menuData, showLoading } = this.props
 
-    if (getMenuLoading) {
+    if (['/login', '/404'].includes(location.pathname) || window.name) return children
+
+    if (showLoading) {
       return (
-        <div className={styles.loading}>
-          <Spin />
+        <div className="loading">
+          <Spin size="large"/>
         </div>
       )
     }
 
-    if (location.pathname === '/login' || location.pathname === '/404') return children
     return (
       <Layout style={{height: '100vh'}}>
         <SiderMenu
-          logo={logo}
+          // logo={logo}
           collapsed={collapsed}
           menuData={menuData}
           location={location}
@@ -50,7 +53,10 @@ class BasicLayout extends React.Component {
         <Layout>
           <HeaderCustom onCollapse={this.handleMenuCollapse} collapsed={collapsed}/>
           <Layout.Content className={styles.layoutMain} id="main">
-            { children }
+            <div>
+              <Breakcrumbs location={location} menuData={menuData} />
+              { children }
+            </div>
           </Layout.Content>
         </Layout>
       </Layout>
@@ -58,9 +64,9 @@ class BasicLayout extends React.Component {
   }
 }
 
-export default withRouter(connect(({global, route, loading}) => ({
-    isMobile: global.isMobile,
-    menuData: route.menu,
-    getMenuLoading: loading.models.route  // dva只带的loading，可把请求放在里面
-  })
-)(BasicLayout))
+export default withRouter(connect(({global}) => ({
+  isMobile: global.isMobile,
+  collapsed: global.collapsed,
+  menuData: global.menuData,
+  showLoading: global.showLoading
+}))(BasicLayout))

@@ -1,81 +1,123 @@
 import React from 'react'
-import {Layout, Icon, Menu, Dropdown, message} from 'antd'
+import {Layout, Icon, Menu, Dropdown, Modal, Input, Form} from 'antd'
+import styles from './index.less'
+import cookie from 'react-cookies'
 import router from 'umi/router'
-import style from './index.less'
-import {$cookies} from "../../utils/cookie"
-import ChangePwdModal from '../common/changePwdModal'
-import {logout} from '../../services'
+import {connect} from 'dva'
 
-const {Header} = Layout
+class HeaderCustom extends React.Component {
 
-export default class HeaderCustom extends React.Component {
   state = {
-    showChangePwdDodal: false
+    showChangeword: false
   }
 
-  showModal = () => {
-    this.setState({
-      showChangePwdDodal: true
-    })
-  }
-
-  closeModal = () => {
-    this.setState({
-      showChangePwdDodal: false
-    })
-  }
-
-  menuClick = e => {
-    switch (e.key) {
+  handleClick = ({ key }) => {
+    switch (key) {
       case '1':
-        this.showModal()
+        this.setState({showChangeword: true})
         break
       case '2':
-        this.logout()
+        this.showLogout()
         break
       default:
-        return null
     }
   }
 
-  changePwd = data => {
-    console.log('changePwd', data)
-    this.closeModal()
+  menu = () => {
+    return (
+      <Menu onClick={this.handleClick}>
+        <Menu.Item key="1">修改密码</Menu.Item>
+        <Menu.Divider />
+        <Menu.Item key="2">退出</Menu.Item>
+      </Menu>
+    )
   }
 
-  logout = () => {
-    logout({
-      token: $cookies.get('token')
-    }).then((data) => {
-      if (data && data.header === '000') {
-        $cookies.remove('token')
-        // $cookies.remove('menu')
-        localStorage.removeItem('menu')
-        router.replace('/login')
-      } else {
-        message.error(data.message)
+  validateToNextPassword = (rule, value, callback) => {
+    const { form } = this.props
+    const reg = /^[a-zA-Z\d]{6,16}$/
+    if (value && !reg.test(value)) {
+      callback('请输入6~16位字母或数字')
+    } else {
+      if (form.getFieldValue('newPasswordAgain')) {
+        form.validateFields(['newPasswordAgain'], { force: true })
+      }
+      callback()
+    }
+  }
+
+  compareToFirstPassword = (rule, value, callback) => {
+    const { form } = this.props
+    if (value && value !== form.getFieldValue('newPassword')) {
+      callback('两次输入密码不一致')
+    } else {
+      callback()
+    }
+  }
+
+  handleSubmit = e => {
+    e.preventDefault()
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.changePassword(values)
       }
     })
   }
 
-  menu = () => (
-    <Menu onClick={this.menuClick}>
-      <Menu.Item key="1">
-        <Icon type="lock" />
-        修改密码
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="2">
-        <Icon type="logout" />
-        退出登录
-      </Menu.Item>
-    </Menu>
-  )
+  changePassword = values => {
+    const {dispatch} = this.props
+
+    dispatch({
+      type: 'global/changePassword',
+      payload: {
+        ...values
+      },
+      callback: () => {
+        this.setState({showChangeword: false})
+        this.props.form.resetFields()
+
+        cookie.remove('token_ht_admin')
+        Modal.success({
+          content: '修改成功, 请重新登录！',
+          okText: '确定',
+          onOk() {
+            router.replace('/login')
+          }
+        })
+      }
+    })
+  }
+
+  showLogout = () => {
+    Modal.confirm({
+      title: '提示',
+      content: '是否退出登录？',
+      okText: '确定',
+      cancelText: '取消',
+      onOk() {
+        cookie.remove('token_ht_admin')
+        router.replace('/login')
+      }
+    })
+  }
 
   render() {
-    const {collapsed, onCollapse} = this.props
+    const {showChangeword} = this.state
+    const {form: { getFieldDecorator }, collapsed, onCollapse, changePasswordLoading} = this.props
+
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 }
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 12 }
+      }
+    }
+
     return (
-      <Header className={style.headerCustom}>
+      <Layout.Header className={styles.headerCustom}>
         <Icon
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={() => {
@@ -84,12 +126,54 @@ export default class HeaderCustom extends React.Component {
         />
 
         <Dropdown overlay={this.menu} trigger={['click']}>
-						<span className="ant-dropdown-link">
-							 用户中心 <Icon type="down"/>
-						</span>
+          <span>
+            个人中心 <Icon type="down" />
+          </span>
         </Dropdown>
-        <ChangePwdModal close={this.closeModal} ensure={this.changePwd} visible={this.state.showChangePwdDodal}/>
-      </Header>
+
+
+
+        <Modal
+          closable={false}
+          width={500}
+          visible={showChangeword}
+          maskClosable={false}
+          title="修改密码"
+          okButtonProps={{loading: changePasswordLoading}}
+          onOk={this.handleSubmit}
+          onCancel={() => {
+            this.setState({showChangeword: false})
+            this.props.form.resetFields()
+          }}>
+          <div>
+            <Form {...formItemLayout}>
+              <Form.Item label="旧密码">
+                {getFieldDecorator('oldPassword', {
+                  rules: [{ required: true, message: '旧密码不能为空' }]
+                })(<Input.Password autoComplete="new-password"/>)}
+              </Form.Item>
+              <Form.Item label="新密码">
+                {getFieldDecorator('newPassword', {
+                  rules: [{ required: true, message: '请输入密码' }, {
+                    validator: this.validateToNextPassword,
+                  }]
+                })(<Input.Password autoComplete="new-password"/>)}
+              </Form.Item>
+              <Form.Item label="确认密码">
+                {getFieldDecorator('newPasswordAgain', {
+                  rules: [{ required: true, message: '请再次输入密码' }, {
+                    validator: this.compareToFirstPassword,
+                  }]
+                })(<Input.Password autoComplete="new-password"/>)}
+              </Form.Item>
+            </Form>
+          </div>
+        </Modal>
+      </Layout.Header>
     )
   }
 }
+
+export default connect(({loading}) => ({
+  changePasswordLoading: loading.effects['global/changePassword']
+}))(Form.create()(HeaderCustom))

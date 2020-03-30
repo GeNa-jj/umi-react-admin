@@ -1,33 +1,27 @@
 import React from 'react'
-import {Button} from 'antd'
-import img from '../../assets/images/404.png'
 import styles from './index.less'
+import {Button} from 'antd'
 import router from 'umi/router'
 
-class NotFound extends React.Component {
-	state = {
-		animated: ''
-	}
-
-	goBack = () => {
-    router.push('/')
+class Nofound extends React.Component {
+  render() {
+    return (
+      <div className={`${styles.nofound} bgImg`}>
+        <div className={styles.img}>
+          <img src={require('@/assets/images/404.png')} alt="" />
+          <img src={require('@/assets/images/404_child.png')} className={styles.left} alt="" />
+          <img src={require('@/assets/images/404_child.png')} className={styles.mid} alt="" />
+          <img src={require('@/assets/images/404_child.png')} className={styles.right} alt="" />
+        </div>
+        <div className={styles.text}>
+          <p>抱歉，你访问的页面不存在。</p>
+          <div className={styles.btn}>
+            <Button type="primary" onClick={() => router.push('/')}>返回首页</Button>
+          </div>
+        </div>
+      </div>
+    )
   }
-
-	enter = () => {
-		this.setState({animated: 'hinge'})
-	}
-
-	render() {
-		return (
-				<div className={styles.notFound}>
-					<img src={img} className={`animated swing ${this.state.animated}`} onMouseEnter={this.enter} alt=""/>
-					<p style={{marginTop: 60}}>抱歉，你访问的页面不存在。</p>
-					<Button type="dashed" shape="round" style={{marginTop: 20}} onClick={this.goBack}>
-						Back to home
-					</Button>
-				</div>
-		)
-	}
 }
 
-export default NotFound
+export default Nofound

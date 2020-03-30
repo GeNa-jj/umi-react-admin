@@ -1,4 +1,5 @@
 @import '~antd/lib/style/themes/default.less';
+
 @ease-in-out-circ: cubic-bezier(0.78, 0.14, 0.15, 0.86);
 .logo {
   height: 64px;
@@ -6,7 +7,7 @@
   line-height: 64px;
   padding-left: (@menu-collapsed-width - 32px) / 2;
   transition: all 0.3s;
-  background: #001529;
+  background: @layout-header-background;
   overflow: hidden;
   img {
     display: inline-block;
@@ -23,6 +24,11 @@
     font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
     font-weight: 600;
     cursor: pointer;
+
+    line-height: 1.2;
+    width: 120px;
+    text-align: center;
+    margin-left: 44px;
   }
 }
 
@@ -55,26 +61,8 @@
 }
 
 :global {
-  .drawer .drawer-content {
-    background: #001529;
-  }
-  .ant-menu-inline-collapsed {
-    & > .ant-menu-item .sider-menu-item-img + span,
-    &
-      > .ant-menu-item-group
-      > .ant-menu-item-group-list
-      > .ant-menu-item
-      .sider-menu-item-img
-      + span,
-    & > .ant-menu-submenu > .ant-menu-submenu-title .sider-menu-item-img + span {
-      max-width: 0;
-      display: inline-block;
-      opacity: 0;
-    }
-  }
-  .ant-menu-item .sider-menu-item-img + span,
-  .ant-menu-submenu-title .sider-menu-item-img + span {
-    transition: opacity 0.3s @ease-in-out, width 0.3s @ease-in-out;
-    opacity: 1;
+  .ant-menu-item-selected {
+    background: linear-gradient(0deg, rgba(20,61,117,1), rgba(18,63,128,0)) !important;
+    box-shadow: 0 -2px 0 #4F70BF;
   }
 }

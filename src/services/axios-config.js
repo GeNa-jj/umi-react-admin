@@ -4,7 +4,7 @@
  */
 import axios from 'axios'
 import {message} from 'antd'
-import {$cookies} from '../utils/cookie'
+import cookie from 'react-cookies'
 import router from 'umi/router'
 
 class AxiosConfig {
@@ -16,6 +16,7 @@ class AxiosConfig {
 		this.$ajax = null
 		this.$ajaxForm = null
 		this.$ajaxFile = null
+    this.$ajaxDown = null
 
 		this.install(axios)
 	}
@@ -30,9 +31,12 @@ class AxiosConfig {
 
 					break
 				case 500:
+        case 502:
+          message.destroy()
 					message.error('服务器正忙，请稍后重试')
 					break
 				case 504:
+          message.destroy()
 					message.error('请求超时')
 					break
 				default:
@@ -58,9 +62,13 @@ class AxiosConfig {
 
 	ajaxFilters(axios, CancelToken) {
 		// 缓存作用域
-		axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
+    axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
+    axios.defaults.headers['Pragma'] = 'no-cache'
+    axios.defaults.headers['Cache-Control'] = 'no-cache'
 		// 携带上次的token
 		axios.defaults.withCredentials = true
+    // 超时时间
+    axios.defaults.timeout = 10000
 
 		// 请求拦截器
 		axios.interceptors.request.use(config => {
@@ -69,6 +77,8 @@ class AxiosConfig {
 			config.cancelToken = new CancelToken(res => {
 				this.pending.push({'UrlPath': config.url, 'Cancel': res})
 			})
+      config.headers['Monitor-Dispatch-Tk'] = cookie.load('token_ht_admin') || ''
+      config.headers['Monitor-Dispatch-Path'] = window.location.pathname || ''
 			return config
 		}, function (error) {
 			// Do something with request error
@@ -82,24 +92,27 @@ class AxiosConfig {
 			let resultCode = response.data.resultCode
 
 			this.errResponse(resultCode) // 处理错误信息
-			// Do something with response data
 
-      // TODO 登录判断
-      if (response && response.data) {
-        switch (response.data.header) {
-          case '900':
-          case '905':
-            $cookies.remove('token')
-            // $cookies.remove('menu')
-            localStorage.removeItem('menu')
-            router.replace('/login')
-            break
-          default:
-            break
-        }
+			// Do something with response data
+      switch (response.data.code) {
+        case '001':
+        case '10004':
+        case '10005':
+        case '10006':
+          message.destroy()
+          cookie.remove('token_ht_admin')
+
+          window.location.pathname !== '/login' && router.replace({
+            pathname: '/login',
+            query: {
+              from: encodeURIComponent(window.location.pathname + window.location.search)
+            }
+          })
+          break
+        default:
       }
 
-			return response
+      return response.data
 		}, error => {
 			// let resultCode = 504
 			if (error.response) {
@@ -138,12 +151,18 @@ class AxiosConfig {
 			}
 		})
 
+    // 下载文件流
+    this.$ajaxDown = axios.create({
+      responseType: 'blob'
+    })
+
 		//  取消请求
 		let CancelToken = axios.CancelToken
 
 		this.ajaxFilters(this.$ajax, CancelToken)
 		this.ajaxFilters(this.$ajaxForm, CancelToken)
-		this.ajaxFilters(this.$ajaxFile, CancelToken)
+    this.ajaxFilters(this.$ajaxFile, CancelToken)
+    this.ajaxFilters(this.$ajaxDown, CancelToken)
 	}
 }
 

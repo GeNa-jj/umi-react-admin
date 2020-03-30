@@ -1,27 +1,3 @@
-// 导出
-// handleDownload () {
-//   this.downloadLoading = true
-//   import('@/utils/Export2Excel').then(excel => {
-//     const tHeader = ['上报时间', '线路编码', '车牌号', '车长名', '资格证书ID', '候车时间评分', '车长服务评分', '车厢环境评分', '评价', '联系人', '电话']
-//     const filterVal = ['subDate', 'route', 'busPlate', 'driverName', 'qualification', 'waitingScore', 'driverScore', 'carriageScore', 'comment', 'customer', 'customerPhone']
-//     const list = this.tableList
-//     const data = this.formatJson(filterVal, list)
-//     excel.export_json_to_excel({
-//       header: tHeader,
-//       data,
-//       filename: '车长评价', //非必填
-//       autoWidth: true, //非必填
-//       bookType: 'xlsx' //非必填 xlsx, csv, txt, ... https://github.com/SheetJS/js-xlsx#supported-output-formats
-//     })
-//     this.downloadLoading = false
-//   })
-// },
-// formatJson (filterVal, jsonData) {
-//   return jsonData.map(v => filterVal.map(j => {
-//     return v[j]
-//   }))
-// }
-
 /* eslint-disable */
 require('script-loader!file-saver');
 import XLSX from 'xlsx'

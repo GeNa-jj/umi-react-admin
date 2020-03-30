@@ -8,6 +8,7 @@ const SiderMenuWrapper = props =>
       visible={!props.collapsed}
       placement="left"
       closable={false}
+      width={256}
       onClose={() => {
         props.onCollapse(true)
       }}

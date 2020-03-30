@@ -5,6 +5,8 @@ import styles from './index.less'
 class PaginationCustom extends React.Component {
 	render() {
 		const {
+      current = 1,
+      pageSize = 10,
 			total = 0,
 			defaultCurrent = 1,
 			defaultPageSize = 10,
@@ -16,7 +18,7 @@ class PaginationCustom extends React.Component {
 		return (
 				<div className={styles.pagination}>
 					{ total > 0 ? (
-							<Pagination total={total} defaultCurrent={defaultCurrent} defaultPageSize={defaultPageSize} showTotal={showTotal} pageSizeOptions={pageSizeOptions} showSizeChanger={showSizeChanger} showQuickJumper={showQuickJumper} onChange={this.props.pageChange} onShowSizeChange={this.props.pageChange} />
+							<Pagination current={current} pageSize={pageSize} total={total} defaultCurrent={defaultCurrent} defaultPageSize={defaultPageSize} showTotal={showTotal} pageSizeOptions={pageSizeOptions} showSizeChanger={showSizeChanger} showQuickJumper={showQuickJumper} onChange={this.props.pageChange} onShowSizeChange={this.props.pageChange} />
 					) : ''}
 				</div>
 		)

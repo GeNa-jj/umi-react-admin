@@ -1,96 +1,73 @@
 import React from 'react'
-import {Form, Icon, Input, Button, message} from 'antd'
-import {$cookies} from '../../utils/cookie'
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
 import styles from './index.less'
-import {login} from '../../services'
-import router from 'umi/router'
 import {connect} from 'dva'
+import {Form, Input, Button, message, Icon} from 'antd'
+import cookie from 'react-cookies'
+import router from 'umi/router'
 
 class Login extends React.Component {
 
-	handleSubmit = e => {
-		e.preventDefault()
-		this.props.form.validateFields((err, data) => {
-			if (!err) {
-				this.login(data)
-			}
-		})
-	}
+  handleSubmit = e => {
+    e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        if (!values.userName || !values.password) {
+          message.destroy()
+          message.warning('账号或密码不能为空！')
+          return false
+        }
 
-	login = data => {
-		NProgress.done()
-		NProgress.start()
+        this.login(values)
+      }
+    })
+  }
 
-    login({
-      account: data.username,
-      password: data.password,
-      type: '0'
-    }).then(data => {
-			NProgress.done()
-			if (data && data.header === '000') {
-				$cookies.set('token', data.data.token, data.data.effectTime)
-				// $cookies.set('menu', JSON.stringify(data.data.menu), data.data.effectTime)
-        router.replace('/')
+  login = values => {
+    const {dispatch, location: {query}} = this.props
 
-        const {dispatch} = this.props
-        // 获取mock模拟的菜单
+    dispatch({
+      type: 'global/login',
+      payload: {
+        ...values
+      },
+      callback: res => {
+        cookie.save('token_ht_admin', res.authToken, {maxAge: 60 * 60 * 12, path: '/'})
         dispatch({
-          type: 'route/getMenuData'
+          type: 'global/getMenu',
+          callback: () => router.replace(query.from ? decodeURIComponent(query.from) : '/')
         })
-			} else {
-				message.error(data.message)
-			}
-		}).catch(() => NProgress.done())
-	}
+      }
+    })
+  }
 
-	// password = (rule, value, callback) => {
-	// 	const reg = /^[a-zA-Z\d]{8,16}$/
-	// 	if (value && !reg.test(value)) {
-	// 		return callback(new Error('请输入8~16位大小写字母或数字'))
-	// 	}
-	// 	callback()
-	// }
+  render() {
+    const { form: {getFieldDecorator}, loginLoading } = this.props
 
-	render() {
-		const {getFieldDecorator} = this.props.form
-		return (
-				<div className={styles.login}>
-					<div>
-						<h2>用户登录</h2>
-						<Form onSubmit={this.handleSubmit} className="login-form">
-							<Form.Item label="账号">
-								{getFieldDecorator('username', {
-									rules: [{required: true, message: 'Please input your username!'}],
-								})(
-										<Input
-												prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-												placeholder="Username"
-										/>
-								)}
-							</Form.Item>
-							<Form.Item label="密码">
-								{getFieldDecorator('password', {
-									rules: [{required: true, message: 'Please input your Password!'}]
-								})(
-										<Input
-												prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>}
-												type="password"
-												placeholder="Password"
-										/>
-								)}
-							</Form.Item>
-							<Form.Item>
-								<Button type="primary" htmlType="submit" className="login-form-button">
-									Log in
-								</Button>
-							</Form.Item>
-						</Form>
-					</div>
-				</div>
-		)
-	}
+    return (
+      <div className={`${styles.login} bgImg`}>
+        <div className={styles.content}>
+          <div className={styles.logo}>
+            <h1>umi后台管理系统模版</h1>
+          </div>
+          <Form className={styles.loginBox} onSubmit={this.handleSubmit}>
+            <Form.Item>
+              {getFieldDecorator('userName')(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} size="large" placeholder="账号"/>)}
+            </Form.Item>
+            <Form.Item>
+              {getFieldDecorator('password')(<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} size="large" type="password" placeholder="密码"/>)}
+            </Form.Item>
+            <Form.Item className={styles.loginButton}>
+              <Button type="primary" htmlType="submit" size="large" loading={loginLoading}>
+                登录
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+      </div>
+    )
+  }
 }
 
-export default connect()(Form.create()(Login))
+export default connect(({loading}) => ({
+  loginLoading: loading.effects['global/login']
+}))(Form.create()(Login))

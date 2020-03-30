@@ -1,15 +1,22 @@
-import { message } from 'antd'
-import { $cookies } from '@/utils/cookie'
+// import { message } from 'antd'
 import router from 'umi/router'
-
-// 检查是否已登陆
-const checkLogin = () => !$cookies.isKey('token') && router.replace('/login')
+import cookie from 'react-cookies'
 
 export const dva = {
   config: {
     onError(err) {
       err.preventDefault()
-      err.message && message.error(err.message)
+      if (err.message) {
+        // message.destroy()
+        // message.error('数据异常，请联系管理员')
+        // message.error(err.message)
+      }
+    },
+    onReducer: r => (state, action) => {
+      if (action.payload && !action.payload.isFirstRendering && action.payload.location && action.payload.location.pathname === '/login') {
+        return r({}, action)
+      }
+      return r(state, action)
     }
   }
 }
@@ -20,7 +27,12 @@ export function patchRoutes(routes) {
 
 // 渲染应用之前做权限校验，不通过则跳转到登录页
 export function render(oldRender) {
-  checkLogin()
+  !cookie.load('token_ht_admin') && window.location.pathname !== '/login' && router.replace({
+    pathname: '/login',
+    query: {
+      from: encodeURIComponent(window.location.pathname + window.location.search)
+    }
+  })
   oldRender()
 }
 
